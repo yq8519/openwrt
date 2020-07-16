@@ -41,9 +41,7 @@ define Device/UbiFit
 endef
 
 define Device/DniImage
-	KERNEL_SUFFIX := -fit-uImage.itb
-	KERNEL = kernel-bin | gzip | fit gzip $$(DTS_DIR)/$$(DEVICE_DTS).dtb
-	KERNEL_NAME := Image
+	$(call Device/FitzImage)
 	NETGEAR_BOARD_ID :=
 	NETGEAR_HW_ID :=
 	IMAGES := factory.img sysupgrade.bin
@@ -551,6 +549,7 @@ define Device/zyxel_nbg6617
 	DEVICE_VENDOR := ZyXEL
 	DEVICE_MODEL := NBG6617
 	DEVICE_DTS := qcom-ipq4018-nbg6617
+	KERNEL_SIZE := 4096k
 	ROOTFS_SIZE := 24960k
 	RAS_BOARD := NBG6617
 	RAS_ROOTFS_SIZE := 19840k

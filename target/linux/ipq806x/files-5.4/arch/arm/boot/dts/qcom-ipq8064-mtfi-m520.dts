@@ -24,14 +24,20 @@
 	};
 
 	aliases {
-		serial0 = &gsbi4_serial;
 		mdio-gpio0 = &mdio0;
 		sdcc1 = &sdcc1;
 	};
 
 	chosen {
 		bootargs = "root=/dev/mmcblk0p3 rootfstype=squashfs,ext4 rootwait noinitrd";
-		stdout-path = "serial0:115200n8";
+	};
+
+	cpus {
+		idle-states {
+			CPU_SPC: spc {
+				status = "disabled";
+			};
+		};
 	};
 
 	keys {
@@ -57,15 +63,6 @@
 		};
 	};
 
-	i2c4_pins: i2c4_pinmux {
-		mux {
-			pins = "gpio12", "gpio13";
-			function = "gsbi4";
-			drive-strength = <12>;
-			bias-disable;
-		};
-	};
-
 	led_pins: led_pins {
 		mux {
 			pins = "gpio7", "gpio8", "gpio9", "gpio53";
@@ -76,13 +73,6 @@
 	};
 
 	mdio0_pins: mdio0_pins {
-		mux {
-			pins = "gpio0", "gpio1";
-			function = "mdio";
-			drive-strength = <8>;
-			bias-disable;
-		};
-
 		clk {
 			pins = "gpio1";
 			input-disable;
@@ -90,14 +80,6 @@
 	};
 
 	rgmii2_pins: rgmii2_pins {
-		mux {
-			pins =	"gpio27", "gpio28", "gpio29", "gpio30", "gpio31", "gpio32",
-				"gpio51", "gpio52", "gpio59", "gpio60", "gpio61", "gpio62";
-			function = "rgmii2";
-			drive-strength = <8>;
-			bias-disable;
-		};
-
 		tx {
 			pins = "gpio27", "gpio28", "gpio29", "gpio30", "gpio31", "gpio32";
 			input-disable;
@@ -132,13 +114,6 @@
 	};
 
 	spi_pins: spi_pins {
-		mux {
-			pins = "gpio18", "gpio19", "gpio21";
-			function = "gsbi5";
-			drive-strength = <10>;
-			bias-none;
-		};
-
 		cs {
 			pins = "gpio20";
 			drive-strength = <12>;
@@ -163,6 +138,12 @@
 			status = "okay";
 			compatible = "nxp,pcf8563";
 			reg = <0x51>;
+		};
+
+		tca9539@74 {
+			status = "okay";
+			compatible = "ti,tca9539";
+			reg = <0x74>;
 		};
 	};
 };
@@ -294,17 +275,16 @@
 
 &pcie0 {
 	status = "okay";
-	reset-gpio = <&qcom_pinmux 3 GPIO_ACTIVE_LOW>;
-	pinctrl-0 = <&pcie0_pins>;
-	pinctrl-names = "default";
+
+	reset-gpio = <&qcom_pinmux 3 GPIO_ACTIVE_HIGH>;
+	/delete-property/ perst-gpios;
 };
 
 &pcie1 {
 	status = "okay";
-	reset-gpio = <&qcom_pinmux 48 GPIO_ACTIVE_LOW>;
-	pinctrl-0 = <&pcie1_pins>;
-	pinctrl-names = "default";
-	force_gen1 = <1>;
+
+	reset-gpio = <&qcom_pinmux 48 GPIO_ACTIVE_HIGH>;
+	/delete-property/ perst-gpios;
 };
 
 &mdio0 {

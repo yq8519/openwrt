@@ -34,6 +34,14 @@
 		stdout-path = "serial0:115200n8";
 	};
 
+	cpus {
+		idle-states {
+			CPU_SPC: spc {
+				status = "disabled";
+			};
+		};
+	};
+
 	soc {
 		pinmux@800000 {
 			button_pins: button_pins {
@@ -151,6 +159,12 @@
 					status = "okay";
 					compatible = "nxp,pcf8563";
 					reg = <0x51>;
+				};
+
+				tca9539@74 {
+					status = "okay";
+					compatible = "ti,tca9539";
+					reg = <0x74>;
 				};
 			};
 		};
